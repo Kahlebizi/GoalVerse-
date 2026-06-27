@@ -48,6 +48,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .game-header-right {
@@ -91,22 +92,6 @@
             background: rgba(244, 67, 54, 0.3);
         }
 
-        .btn-kick {
-            padding: 4px 12px;
-            background: rgba(255, 152, 0, 0.2);
-            border: 1px solid rgba(255, 152, 0, 0.3);
-            border-radius: 8px;
-            color: #FF9800;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-kick:hover {
-            background: rgba(255, 152, 0, 0.3);
-        }
-
         .game-container {
             flex: 1;
             position: relative;
@@ -124,15 +109,6 @@
             cursor: none;
         }
 
-        .game-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-        }
-
         .score-display {
             position: absolute;
             top: 15px;
@@ -145,6 +121,7 @@
             border-radius: 20px;
             backdrop-filter: blur(10px);
             pointer-events: none;
+            z-index: 5;
         }
 
         .score-team {
@@ -176,6 +153,7 @@
             border-radius: 15px;
             backdrop-filter: blur(10px);
             pointer-events: none;
+            z-index: 5;
             display: flex;
             align-items: center;
             gap: 15px;
@@ -184,15 +162,6 @@
         .status-text {
             color: rgba(255, 255, 255, 0.7);
             font-size: 13px;
-        }
-
-        .status-text strong {
-            color: white;
-        }
-
-        .players-count {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 12px;
         }
 
         .mobile-controls {
@@ -204,7 +173,7 @@
             justify-content: space-between;
             padding: 0 20px;
             pointer-events: none;
-            z-index: 5;
+            z-index: 10;
         }
 
         .mobile-controls.active {
@@ -260,49 +229,6 @@
             box-shadow: 0 0 60px rgba(244, 67, 54, 0.5);
         }
 
-        .direction-indicator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            display: none;
-        }
-
-        .direction-indicator.active {
-            display: block;
-        }
-
-        .direction-arrow {
-            width: 40px;
-            height: 40px;
-            border-left: 4px solid rgba(255, 255, 255, 0.5);
-            border-top: 4px solid rgba(255, 255, 255, 0.5);
-            transform: rotate(45deg);
-            position: absolute;
-            top: -20px;
-            left: -20px;
-        }
-
-        .friend-indicator {
-            position: absolute;
-            top: 60px;
-            right: 15px;
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            padding: 8px 15px;
-            border-radius: 12px;
-            color: #4CAF50;
-            font-size: 12px;
-            font-weight: 600;
-            pointer-events: none;
-            display: none;
-        }
-
-        .friend-indicator.show {
-            display: block;
-        }
-
         .waiting-overlay {
             position: absolute;
             top: 0;
@@ -310,34 +236,16 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.7);
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 20;
+            z-index: 15;
             backdrop-filter: blur(5px);
         }
 
-        .waiting-overlay.hidden {
-            display: none;
-        }
-
-        .waiting-text {
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .waiting-sub {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 16px;
-        }
-
-        .waiting-players {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            margin-top: 15px;
+        .waiting-overlay.show {
+            display: flex;
         }
 
         .waiting-spinner {
@@ -353,6 +261,57 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        .waiting-text {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .waiting-sub {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .mode-badge {
+            position: absolute;
+            top: 70px;
+            left: 15px;
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            padding: 6px 14px;
+            border-radius: 10px;
+            color: #FF9800;
+            font-size: 12px;
+            font-weight: 600;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .mode-badge.show {
+            display: block;
+        }
+
+        .timer-display {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 18px;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+        }
+
+        .timer-display.show {
+            display: block;
         }
 
         @media (max-width: 768px) {
@@ -418,12 +377,17 @@
                 font-size: 11px;
             }
 
-            .waiting-text {
-                font-size: 18px;
+            .mode-badge {
+                top: 60px;
+                left: 10px;
+                font-size: 10px;
+                padding: 4px 10px;
             }
 
-            .waiting-sub {
-                font-size: 13px;
+            .timer-display {
+                top: 60px;
+                font-size: 14px;
+                padding: 4px 14px;
             }
         }
 
@@ -461,11 +425,11 @@
                 <span class="score-team blue" id="blueScore">0</span>
             </div>
 
-            <div class="friend-indicator" id="friendIndicator">🎮 Amigo na partida!</div>
+            <div class="mode-badge" id="modeBadge">🎯 Modo: Treino</div>
+            <div class="timer-display" id="timerDisplay">⏱️ 3:00</div>
 
             <div class="game-status-bar">
-                <span class="status-text" id="gameStatusText">⏳ Aguardando jogadores...</span>
-                <span class="players-count" id="playersCount">👥 0/0</span>
+                <span class="status-text" id="gameStatusText">⏳ Aguardando...</span>
             </div>
 
             <div class="mobile-controls" id="mobileControls">
@@ -477,9 +441,8 @@
 
             <div class="waiting-overlay" id="waitingOverlay">
                 <div class="waiting-spinner"></div>
-                <div class="waiting-text">⏳ Aguardando...</div>
-                <div class="waiting-sub">Aguardando mais jogadores</div>
-                <div class="waiting-players" id="waitingPlayers">👥 1/2 jogadores</div>
+                <div class="waiting-text" id="waitingText">⏳ Aguardando jogadores...</div>
+                <div class="waiting-sub" id="waitingSub">Aguardando oponente</div>
             </div>
         </div>
     </div>
@@ -490,6 +453,11 @@
         const container = document.getElementById('gameContainer');
 
         let canvasWidth, canvasHeight;
+        let gameMode = 'online';
+        let gameState = 'waiting';
+        let matchTime = 180;
+        let timerInterval = null;
+        let isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
         function resizeCanvas() {
             const rect = container.getBoundingClientRect();
@@ -503,48 +471,14 @@
         window.addEventListener('resize', resizeCanvas);
 
         const playerName = localStorage.getItem('goalverse_current_user') || 'Jogador';
-        const roomId = localStorage.getItem('goalverse_room') || 'sala1';
-
         document.getElementById('playerNameDisplay').textContent = playerName;
 
-        const roomNames = {
-            sala1: '🏟️ Sala 1 - Futebol 5v5',
-            sala2: '⚔️ Sala 2 - Batalha 3v3',
-            sala3: '🎯 Sala 3 - Duelo 2v2'
-        };
+        const savedMode = localStorage.getItem('goalverse_mode') || 'online';
+        gameMode = savedMode;
 
-        document.getElementById('roomBadge').textContent = roomNames[roomId] || '🏟️ Sala';
-
-        const users = JSON.parse(localStorage.getItem('goalverse_users') || '{}');
-        const currentUserData = users[playerName] || {};
-        const friends = currentUserData.friends || [];
-
-        let friendInRoom = false;
-        for (let friend of friends) {
-            if (users[friend] && users[friend].currentRoom === roomId) {
-                friendInRoom = true;
-                break;
-            }
-        }
-
-        if (friendInRoom) {
-            document.getElementById('friendIndicator').classList.add('show');
-        }
-
-        const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         if (isMobile) {
             document.getElementById('mobileControls').classList.add('active');
         }
-
-        let gameState = 'waiting';
-        let players = {};
-        let ball = {
-            x: 0,
-            y: 0,
-            vx: 0,
-            vy: 0,
-            radius: 12
-        };
 
         let localPlayer = {
             x: 0,
@@ -553,69 +487,211 @@
             speed: 4.5,
             direction: 0,
             team: 'red',
-            kicking: false,
             kickCooldown: 0
         };
 
+        let ball = {
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            radius: 12
+        };
+
+        let aiPlayers = [];
         let scores = { red: 0, blue: 0 };
         let keys = { w: false, a: false, s: false, d: false };
         let joystick = { x: 0, y: 0, active: false };
         let isKicking = false;
 
-        let playersList = [];
+        const modeNames = {
+            online: '🌍 Multiplayer',
+            '1v1': '⚔️ Duelo 1v1',
+            solo: '🎯 Treino Solo'
+        };
+
+        document.getElementById('modeBadge').textContent = 'Modo: ' + (modeNames[gameMode] || 'Online');
+        document.getElementById('modeBadge').classList.add('show');
 
         function initGame() {
+            if (gameMode === 'online') {
+                startOnlineMode();
+            } else if (gameMode === '1v1') {
+                startDuelMode();
+            } else if (gameMode === 'solo') {
+                startSoloMode();
+            }
+        }
+
+        function startOnlineMode() {
+            const roomId = localStorage.getItem('goalverse_room') || 'sala1';
+            document.getElementById('roomBadge').textContent = '🏟️ ' + (roomId === 'sala1' ? 'Sala 1 - 5v5' : roomId === 'sala2' ? 'Sala 2 - 3v3' : 'Sala 3 - 2v2');
+            
+            document.getElementById('waitingText').textContent = '⏳ Aguardando jogadores...';
+            document.getElementById('waitingSub').textContent = 'Aguardando mais jogadores para começar';
+            document.getElementById('waitingOverlay').classList.add('show');
+
+            setTimeout(() => {
+                document.getElementById('waitingOverlay').classList.remove('show');
+                gameState = 'playing';
+                document.getElementById('gameStatusText').textContent = '🎮 Jogo em andamento!';
+                startTimer();
+            }, 2000);
+
+            resetGame();
+        }
+
+        function startDuelMode() {
+            document.getElementById('roomBadge').textContent = '⚔️ Duelo 1v1';
+            document.getElementById('waitingText').textContent = '⚔️ Duelo 1v1';
+            document.getElementById('waitingSub').textContent = 'Você contra a IA!';
+            document.getElementById('waitingOverlay').classList.add('show');
+
+            setTimeout(() => {
+                document.getElementById('waitingOverlay').classList.remove('show');
+                gameState = 'playing';
+                document.getElementById('gameStatusText').textContent = '⚔️ Duelo contra a IA!';
+                
+                localPlayer.team = 'red';
+                localPlayer.x = canvasWidth * 0.2;
+                localPlayer.y = canvasHeight / 2;
+
+                aiPlayers = [{
+                    name: 'IA Oponente',
+                    x: canvasWidth * 0.8,
+                    y: canvasHeight / 2,
+                    radius: 18,
+                    team: 'blue',
+                    speed: 3.2,
+                    direction: 0
+                }];
+
+                startTimer();
+            }, 1500);
+
+            resetGame();
+        }
+
+        function startSoloMode() {
+            document.getElementById('roomBadge').textContent = '🎯 Treino Solo';
+            document.getElementById('waitingText').textContent = '🎯 Treino Solo';
+            document.getElementById('waitingSub').textContent = 'Pratique contra o goleiro!';
+            document.getElementById('waitingOverlay').classList.add('show');
+
+            setTimeout(() => {
+                document.getElementById('waitingOverlay').classList.remove('show');
+                gameState = 'playing';
+                document.getElementById('gameStatusText').textContent = '🎯 Treine seus chutes!';
+                
+                localPlayer.team = 'red';
+                localPlayer.x = canvasWidth * 0.2;
+                localPlayer.y = canvasHeight / 2;
+
+                aiPlayers = [{
+                    name: 'Goleiro IA',
+                    x: canvasWidth * 0.88,
+                    y: canvasHeight / 2,
+                    radius: 25,
+                    team: 'blue',
+                    speed: 3.5,
+                    direction: 0,
+                    isGoalkeeper: true
+                }];
+
+                startTimer();
+            }, 1500);
+
+            resetGame();
+        }
+
+        function resetGame() {
             ball.x = canvasWidth / 2;
             ball.y = canvasHeight / 2;
             ball.vx = 0;
             ball.vy = 0;
-
-            localPlayer.x = canvasWidth * 0.25;
-            localPlayer.y = canvasHeight / 2;
-
-            const roomConfigs = {
-                sala1: { maxPlayers: 10, teams: { red: [], blue: [] } },
-                sala2: { maxPlayers: 6, teams: { red: [], blue: [] } },
-                sala3: { maxPlayers: 4, teams: { red: [], blue: [] } }
-            };
-
-            const config = roomConfigs[roomId] || roomConfigs.sala1;
-            const totalPlayers = Math.min(Object.keys(users).length, config.maxPlayers);
-            const half = Math.floor(totalPlayers / 2);
-
-            let redTeam = [];
-            let blueTeam = [];
-            const allPlayers = Object.keys(users).filter(u => users[u].currentRoom === roomId);
-            
-            allPlayers.forEach((name, index) => {
-                if (index < half) {
-                    redTeam.push(name);
-                } else {
-                    blueTeam.push(name);
-                }
-            });
-
-            if (redTeam.includes(playerName)) {
-                localPlayer.team = 'red';
-                localPlayer.x = canvasWidth * 0.25;
-            } else if (blueTeam.includes(playerName)) {
-                localPlayer.team = 'blue';
-                localPlayer.x = canvasWidth * 0.75;
-            }
-
-            playersList = allPlayers;
-            document.getElementById('waitingPlayers').textContent = `👥 ${playersList.length}/${config.maxPlayers} jogadores`;
-
-            if (playersList.length >= 2) {
-                startGame();
-            }
+            scores = { red: 0, blue: 0 };
+            document.getElementById('redScore').textContent = '0';
+            document.getElementById('blueScore').textContent = '0';
         }
 
-        function startGame() {
-            gameState = 'playing';
-            document.getElementById('waitingOverlay').classList.add('hidden');
-            document.getElementById('gameStatusText').textContent = '🎮 Jogo em andamento!';
-            document.getElementById('playersCount').textContent = `👥 ${playersList.length} jogadores`;
+        function startTimer() {
+            matchTime = 180;
+            document.getElementById('timerDisplay').classList.add('show');
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                matchTime--;
+                const minutes = Math.floor(matchTime / 60);
+                const seconds = matchTime % 60;
+                document.getElementById('timerDisplay').textContent = '⏱️ ' + minutes + ':' + seconds.toString().padStart(2, '0');
+                
+                if (matchTime <= 0) {
+                    clearInterval(timerInterval);
+                    gameState = 'finished';
+                    document.getElementById('gameStatusText').textContent = '⏰ Tempo esgotado!';
+                }
+            }, 1000);
+        }
+
+        function updateAI() {
+            if (gameMode === 'solo') {
+                const gk = aiPlayers[0];
+                if (!gk) return;
+
+                const targetY = ball.y;
+                const dx = targetY - gk.y;
+                const speed = gk.speed * 0.7;
+                
+                if (Math.abs(dx) > 10) {
+                    gk.y += Math.sign(dx) * Math.min(Math.abs(dx) * 0.08, speed);
+                }
+
+                gk.y = Math.max(gk.radius, Math.min(canvasHeight - gk.radius, gk.y));
+
+                const distToBall = Math.sqrt(Math.pow(ball.x - gk.x, 2) + Math.pow(ball.y - gk.y, 2));
+                if (distToBall < gk.radius + ball.radius + 10 && ball.x > canvasWidth * 0.6) {
+                    const angle = Math.atan2(ball.y - gk.y, ball.x - gk.x);
+                    const pushForce = 6;
+                    ball.vx += Math.cos(angle) * pushForce;
+                    ball.vy += Math.sin(angle) * pushForce;
+                }
+
+                if (ball.x > canvasWidth * 0.9 && Math.abs(ball.y - gk.y) < 50) {
+                    if (ball.vx > 0) {
+                        ball.vx *= -0.8;
+                        ball.vy *= 0.5;
+                    }
+                }
+
+            } else if (gameMode === '1v1') {
+                const ai = aiPlayers[0];
+                if (!ai) return;
+
+                const dx = ball.x - ai.x;
+                const dy = ball.y - ai.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+
+                if (dist > 50) {
+                    const speed = ai.speed * 0.9;
+                    ai.x += (dx / dist) * Math.min(dist * 0.04, speed);
+                    ai.y += (dy / dist) * Math.min(dist * 0.04, speed);
+                } else {
+                    const angle = Math.atan2(dy, dx);
+                    ai.x += Math.cos(angle) * ai.speed * 0.3;
+                    ai.y += Math.sin(angle) * ai.speed * 0.3;
+                }
+
+                ai.x = Math.max(ai.radius, Math.min(canvasWidth - ai.radius, ai.x));
+                ai.y = Math.max(ai.radius, Math.min(canvasHeight - ai.radius, ai.y));
+
+                if (dist < ai.radius + ball.radius + 5) {
+                    const angle = Math.atan2(ball.y - ai.y, ball.x - ai.x);
+                    const pushForce = 7;
+                    ball.vx += Math.cos(angle) * pushForce;
+                    ball.vy += Math.sin(angle) * pushForce;
+                }
+            }
         }
 
         function updatePlayerMovement() {
@@ -653,7 +729,6 @@
             if (dx !== 0 || dy !== 0) {
                 const newX = localPlayer.x + dx;
                 const newY = localPlayer.y + dy;
-                
                 const margin = localPlayer.radius;
                 localPlayer.x = Math.max(margin, Math.min(canvasWidth - margin, newX));
                 localPlayer.y = Math.max(margin, Math.min(canvasHeight - margin, newY));
@@ -670,6 +745,7 @@
             }
 
             updateBall();
+            updateAI();
         }
 
         function kickBall() {
@@ -732,14 +808,26 @@
             
             if (ball.x < 20 && ball.y > canvasHeight/2 - goalHeight/2 && ball.y < canvasHeight/2 + goalHeight/2) {
                 scores.blue++;
-                resetBall();
                 document.getElementById('blueScore').textContent = scores.blue;
+                resetBall();
+                if (gameMode === 'solo' || gameMode === '1v1') {
+                    document.getElementById('gameStatusText').textContent = '💀 Gol do oponente!';
+                    setTimeout(() => {
+                        document.getElementById('gameStatusText').textContent = gameMode === 'solo' ? '🎯 Continue treinando!' : '⚔️ Duelo continua!';
+                    }, 1500);
+                }
             }
             
             if (ball.x > canvasWidth - 20 && ball.y > canvasHeight/2 - goalHeight/2 && ball.y < canvasHeight/2 + goalHeight/2) {
                 scores.red++;
-                resetBall();
                 document.getElementById('redScore').textContent = scores.red;
+                resetBall();
+                if (gameMode === 'solo' || gameMode === '1v1') {
+                    document.getElementById('gameStatusText').textContent = '⚽ GOOOOOOOL!';
+                    setTimeout(() => {
+                        document.getElementById('gameStatusText').textContent = gameMode === 'solo' ? '🎯 Continue treinando!' : '⚔️ Duelo continua!';
+                    }, 1500);
+                }
             }
         }
 
@@ -752,7 +840,6 @@
 
         function draw() {
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
             drawField();
             drawPlayers();
             drawBall();
@@ -790,29 +877,8 @@
         }
 
         function drawPlayers() {
-            const allPlayers = Object.keys(users).filter(u => users[u].currentRoom === roomId);
-            
-            allPlayers.forEach((name, index) => {
-                let x, y, team;
-                const isLocal = name === playerName;
-                
-                if (isLocal) {
-                    x = localPlayer.x;
-                    y = localPlayer.y;
-                    team = localPlayer.team;
-                } else {
-                    const offset = index * 40;
-                    if (index % 2 === 0) {
-                        x = canvasWidth * 0.3 + (index * 30);
-                        y = canvasHeight * 0.2 + (index * 35);
-                    } else {
-                        x = canvasWidth * 0.7 - (index * 30);
-                        y = canvasHeight * 0.8 - (index * 35);
-                    }
-                    team = index % 2 === 0 ? 'red' : 'blue';
-                }
-
-                const isRed = team === 'red';
+            if (gameMode === 'solo' || gameMode === '1v1') {
+                const isRed = localPlayer.team === 'red';
                 const color = isRed ? '#f44336' : '#2196F3';
                 const glowColor = isRed ? 'rgba(244, 67, 54, 0.3)' : 'rgba(33, 150, 243, 0.3)';
 
@@ -820,7 +886,7 @@
                 ctx.shadowBlur = 20;
 
                 ctx.beginPath();
-                ctx.arc(x, y, localPlayer.radius, 0, Math.PI * 2);
+                ctx.arc(localPlayer.x, localPlayer.y, localPlayer.radius, 0, Math.PI * 2);
                 ctx.fillStyle = color;
                 ctx.fill();
                 ctx.shadowBlur = 0;
@@ -833,16 +899,40 @@
                 ctx.font = isMobile ? '10px Arial' : '12px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'bottom';
-                ctx.fillText(isLocal ? 'Você' : name, x, y - localPlayer.radius - 5);
+                ctx.fillText('Você', localPlayer.x, localPlayer.y - localPlayer.radius - 5);
 
-                if (isLocal && isKicking) {
-                    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-                    ctx.lineWidth = 3;
+                aiPlayers.forEach(ai => {
+                    const aiColor = ai.team === 'red' ? '#f44336' : '#2196F3';
+                    ctx.shadowColor = 'rgba(255,255,255,0.1)';
+                    ctx.shadowBlur = 10;
+
                     ctx.beginPath();
-                    ctx.arc(x, y, localPlayer.radius + 10, 0, Math.PI * 2);
+                    ctx.arc(ai.x, ai.y, ai.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = aiColor;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                    ctx.lineWidth = 2;
                     ctx.stroke();
-                }
-            });
+
+                    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                    ctx.font = isMobile ? '9px Arial' : '11px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText(ai.isGoalkeeper ? '🧤 GK' : ai.name, ai.x, ai.y - ai.radius - 5);
+
+                    if (ai.isGoalkeeper) {
+                        ctx.strokeStyle = 'rgba(255,215,0,0.3)';
+                        ctx.lineWidth = 2;
+                        ctx.setLineDash([5, 5]);
+                        ctx.beginPath();
+                        ctx.arc(ai.x, ai.y, ai.radius + 8, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+                });
+            }
         }
 
         function drawBall() {
@@ -969,7 +1059,7 @@
                 joystick.x = dx / maxDist;
                 joystick.y = dy / maxDist;
 
-                joystickKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+                joystickKnob.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
             }
 
             document.getElementById('kickButton').addEventListener('touchstart', (e) => {
@@ -987,12 +1077,8 @@
 
         function leaveGame() {
             if (confirm('Tem certeza que quer sair da partida?')) {
-                const users = JSON.parse(localStorage.getItem('goalverse_users') || '{}');
-                if (users[playerName]) {
-                    delete users[playerName].currentRoom;
-                    localStorage.setItem('goalverse_users', JSON.stringify(users));
-                }
                 localStorage.removeItem('goalverse_room');
+                localStorage.removeItem('goalverse_mode');
                 window.location.href = 'menu.html';
             }
         }
@@ -1001,17 +1087,15 @@
 
         window.addEventListener('resize', () => {
             resizeCanvas();
-            initGame();
         });
 
         initGame();
         gameLoop();
 
         console.log('🎮 GoalVerse - Jogo iniciado!');
-        console.log(`👤 Jogador: ${playerName}`);
-        console.log(`🏟️ Sala: ${roomId}`);
-        console.log(`📱 Mobile: ${isMobile ? 'Sim' : 'Não'}`);
-        console.log(`👥 Amigo na sala: ${friendInRoom ? 'Sim 🎮' : 'Não'}`);
+        console.log('👤 Jogador:', playerName);
+        console.log('📱 Mobile:', isMobile ? 'Sim' : 'Não');
+        console.log('🎯 Modo:', gameMode);
     </script>
 </body>
 </html>
