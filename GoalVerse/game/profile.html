@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - GoalVerse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 550px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 5px;
+        }
+
+        .title {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .title span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-section {
+            display: block;
+        }
+
+        .form-section.hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .avatar-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .avatar-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.1);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .avatar-option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+
+        .divider {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            margin: 20px 0;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 0 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .toggle-link {
+            color: #667eea;
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .toggle-link:hover {
+            color: #764ba2;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .profile-view {
+            display: none;
+        }
+
+        .profile-view.show {
+            display: block;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin: 0 auto 15px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-name {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .profile-nick {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-value {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .stat-highlight {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-highlight .stat-value {
+            color: #667eea;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        .btn-logout {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-logout:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        .level-bar {
+            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .level-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .stat-card {
+                padding: 10px;
+            }
+            .stat-value {
+                font-size: 18px;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">⚽</div>
+            <div class="title">Goal<span>Verse</span></div>
+            <div class="subtitle">Seu perfil e estatísticas</div>
+        </div>
+
+        <div id="loginSection" class="form-section">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>👤 Nome de usuário</label>
+                    <input type="text" id="loginUsername" placeholder="Digite seu usuário" required>
+                </div>
+                <div class="form-group">
+                    <label>🔒 Senha</label>
+                    <input type="password" id="loginPassword" placeholder="Digite sua senha" required>
+                </div>
+                <div id="loginError" class="error-message"></div>
+                <button type="submit" class="btn btn-primary">🚀 Entrar</button>
+            </form>
+
+            <div class="divider"><span>OU CRIE UMA CONTA</span></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>👤 Nome de usuário</label>
+                    <input type="text" id="regUsername" placeholder="Escolha um nome único" required>
+                </div>
+                <div class="form-group">
+                    <label>🎮 Apelido (nickname)</label>
+                    <input type="text" id="regNickname" placeholder="Como quer ser chamado?" required>
+                </div>
+                <div class="form-group">
+                    <label>📸 Escolha seu avatar</label>
+                    <div class="avatar-selector" id="avatarSelector">
+                        <div class="avatar-option" data-avatar="😊">😊</div>
+                        <div class="avatar-option" data-avatar="😎">😎</div>
+                        <div class="avatar-option" data-avatar="🦊">🦊</div>
+                        <div class="avatar-option" data-avatar="🐺">🐺</div>
+                        <div class="avatar-option" data-avatar="🦅">🦅</div>
+                        <div class="avatar-option" data-avatar="🐉">🐉</div>
+                        <div class="avatar-option" data-avatar="⚡">⚡</div>
+                        <div class="avatar-option" data-avatar="🌟">🌟</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>🔒 Senha</label>
+                    <input type="password" id="regPassword" placeholder="Crie uma senha segura" required>
+                </div>
+                <div class="form-group">
+                    <label>🔒 Confirmar senha</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Confirme sua senha" required>
+                </div>
+                <div id="registerError" class="error-message"></div>
+                <div id="registerSuccess" class="success-message"></div>
+                <button type="submit" class="btn btn-success">✅ Criar Conta</button>
+            </form>
+        </div>
+
+        <div id="profileSection" class="profile-view">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">😊</div>
+                <div class="profile-name" id="profileName">Usuário</div>
+                <div class="profile-nick" id="profileNick">@nickname</div>
+            </div>
+
+            <div class="level-info">
+                <span>Nível <span id="profileLevel">1</span></span>
+                <span><span id="profileXP">0</span> / <span id="profileNextLevel">100</span> XP</span>
+            </div>
+            <div class="level-bar">
+                <div class="level-bar-fill" id="levelBarFill" style="width: 0%"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card stat-highlight">
+                    <div class="stat-value" id="statGoals">0</div>
+                    <div class="stat-label">⚽ Gols</div>
+                </div>
+                <div class="stat-card stat-highlight">
+                    <div class="stat-value" id="statAssists">0</div>
+                    <div class="stat-label">🎯 Assistências</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statMatches">0</div>
+                    <div class="stat-label">🏆 Partidas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statWins">0</div>
+                    <div class="stat-label">⭐ Vitórias</div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="goToMenuBtn">🏠 Menu</button>
+                <button class="btn btn-logout" id="logoutBtn">🚪 Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const avatars = ['😊', '😎', '🦊', '🐺', '🦅', '🐉', '⚡', '🌟'];
+        let selectedAvatar = '😊';
+        let currentUser = null;
+
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('goalverse_users') || '{}');
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('goalverse_users', JSON.stringify(users));
+        }
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('goalverse_current_user') || 'null');
+        }
+
+        function setCurrentUser(username) {
+            localStorage.setItem('goalverse_current_user', JSON.stringify(username));
+        }
+
+        document.querySelectorAll('.avatar-option').forEach(el => {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAvatar = this.dataset.avatar;
+            });
+        });
+
+        document.querySelector('.avatar-option').classList.add('selected');
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const nickname = document.getElementById('regNickname').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const errorEl = document.getElementById('registerError');
+            const successEl = document.getElementById('registerSuccess');
+
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+
+            if (!username || !nickname || !password || !confirmPassword) {
+                errorEl.textContent = 'Preencha todos os campos!';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (username.length < 3) {
+                errorEl.textContent = 'Usuário deve ter pelo menos 3 caracteres!';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (password.length < 4) {
+                errorEl.textContent = 'Senha deve ter pelo menos 4 caracteres!';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorEl.textContent = 'As senhas não coincidem!';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            const users = getUsers();
+            if (users[username]) {
+                errorEl.textContent = 'Usuário já existe!';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            users[username] = {
+                username: username,
+                nickname: nickname,
+                avatar: selectedAvatar,
+                password: password,
+                stats: {
+                    goals: 0,
+                    assists: 0,
+                    matches: 0,
+                    wins: 0,
+                    xp: 0,
+                    level: 1
+                },
+                createdAt: new Date().toISOString()
+            };
+
+            saveUsers(users);
+            successEl.textContent = 'Conta criada com sucesso! Faça login.';
+            successEl.classList.add('show');
+            this.reset();
+            document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+            document.querySelector('.avatar-option').classList.add('selected');
+            selectedAvatar = '😊';
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            errorEl.classList.remove('show');
+
+            if (!username || !password) {
+                errorEl.textContent = 'Preencha todos os campos!';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            const users = getUsers();
+            if (!users[username]) {
+                errorEl.textContent = 'Usuário não encontrado!';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (users[username].password !== password) {
+                errorEl.textContent = 'Senha incorreta!';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            setCurrentUser(username);
+            loadProfile(username);
+        });
+
+        function loadProfile(username) {
+            const users = getUsers();
+            const user = users[username];
+            if (!user) return;
+
+            currentUser = username;
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('profileSection').classList.add('show');
+
+            document.getElementById('profileAvatar').textContent = user.avatar || '😊';
+            document.getElementById('profileName').textContent = user.username;
+            document.getElementById('profileNick').textContent = '@' + (user.nickname || user.username);
+
+            const stats = user.stats || { goals: 0, assists: 0, matches: 0, wins: 0, xp: 0, level: 1 };
+            document.getElementById('statGoals').textContent = stats.goals || 0;
+            document.getElementById('statAssists').textContent = stats.assists || 0;
+            document.getElementById('statMatches').textContent = stats.matches || 0;
+            document.getElementById('statWins').textContent = stats.wins || 0;
+
+            const level = stats.level || 1;
+            const xp = stats.xp || 0;
+            const nextLevelXP = level * 100;
+            const progress = Math.min((xp / nextLevelXP) * 100, 100);
+
+            document.getElementById('profileLevel').textContent = level;
+            document.getElementById('profileXP').textContent = xp;
+            document.getElementById('profileNextLevel').textContent = nextLevelXP;
+            document.getElementById('levelBarFill').style.width = progress + '%';
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Tem certeza que quer sair?')) {
+                localStorage.removeItem('goalverse_current_user');
+                document.getElementById('profileSection').classList.remove('show');
+                document.getElementById('loginSection').style.display = 'block';
+                document.getElementById('loginForm').reset();
+                currentUser = null;
+            }
+        });
+
+        document.getElementById('goToMenuBtn').addEventListener('click', function() {
+            window.location.href = 'menu.html';
+        });
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedUser = getCurrentUser();
+            if (savedUser) {
+                const users = getUsers();
+                if (users[savedUser]) {
+                    loadProfile(savedUser);
+                    return;
+                }
+            }
+            document.getElementById('loginSection').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
