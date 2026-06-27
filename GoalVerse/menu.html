@@ -458,6 +458,59 @@
             padding: 30px 0;
         }
 
+        .modos-rapidos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .modo-rapido-btn {
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modo-rapido-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .modo-rapido-btn .modo-icon {
+            font-size: 28px;
+        }
+
+        .modo-rapido-btn .modo-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .modo-rapido-btn.duel {
+            border-color: rgba(244, 67, 54, 0.3);
+        }
+
+        .modo-rapido-btn.duel:hover {
+            border-color: rgba(244, 67, 54, 0.6);
+        }
+
+        .modo-rapido-btn.solo {
+            border-color: rgba(255, 152, 0, 0.3);
+        }
+
+        .modo-rapido-btn.solo:hover {
+            border-color: rgba(255, 152, 0, 0.6);
+        }
+
         @media (max-width: 768px) {
             .main-grid {
                 grid-template-columns: 1fr;
@@ -483,6 +536,10 @@
             .server-info {
                 flex-direction: column;
                 gap: 5px;
+            }
+
+            .modos-rapidos {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -574,6 +631,22 @@
             </div>
 
             <div>
+                <div class="card">
+                    <div class="card-title">⚡ <span>Modo Rápido</span></div>
+                    <div class="modos-rapidos">
+                        <button class="modo-rapido-btn duel" onclick="startGameMode('1v1')">
+                            <span class="modo-icon">⚔️</span>
+                            <span>1v1 Duelo</span>
+                            <span class="modo-label">Desafie a IA</span>
+                        </button>
+                        <button class="modo-rapido-btn solo" onclick="startGameMode('solo')">
+                            <span class="modo-icon">🎯</span>
+                            <span>Treino Solo</span>
+                            <span class="modo-label">Pratique chutes</span>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-title">👥 <span>Amigos</span></div>
                     <div class="friends-list" id="friendsList">
@@ -701,6 +774,23 @@
             saveUsers(users);
 
             localStorage.setItem('goalverse_room', roomId);
+            localStorage.setItem('goalverse_mode', 'online');
+            window.location.href = 'game.html';
+        }
+
+        function startGameMode(mode) {
+            if (!currentUser) {
+                alert('Faça login primeiro!');
+                return;
+            }
+
+            const modeNames = {
+                '1v1': '⚔️ Duelo 1v1',
+                'solo': '🎯 Treino Solo'
+            };
+
+            localStorage.setItem('goalverse_mode', mode);
+            localStorage.setItem('goalverse_room', 'solo_' + mode);
             window.location.href = 'game.html';
         }
 
@@ -841,7 +931,7 @@
         }
 
         function removeFriend(friendName) {
-            if (!confirm(`Remover ${friendName} dos amigos?`)) return;
+            if (!confirm('Remover ' + friendName + ' dos amigos?')) return;
 
             const users = getUsers();
             const user = users[currentUser];
@@ -855,10 +945,10 @@
             const users = getUsers();
             const friend = users[friendName];
             if (!friend || !friend.currentRoom) {
-                alert(`${friendName} está offline!`);
+                alert(friendName + ' está offline!');
                 return;
             }
-            alert(`🎮 Convite enviado para ${friendName}!`);
+            alert('🎮 Convite enviado para ' + friendName + '!');
         }
 
         function goToProfile() {
