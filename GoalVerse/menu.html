@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoalVerse - Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 36px;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo-text span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-nick {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        .btn-profile {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-profile:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .servers-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .server-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .server-item:hover {
+            transform: translateX(5px);
+            border-color: rgba(102, 126, 234, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .server-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .server-name {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot.green {
+            background: #4CAF50;
+        }
+
+        .status-dot.yellow {
+            background: #FF9800;
+        }
+
+        .status-dot.red {
+            background: #f44336;
+        }
+
+        .server-info {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .server-players {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .server-players span {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .btn-join {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .btn-join:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-join:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ranking-table {
+            width: 100%;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .ranking-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .ranking-position {
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+            width: 30px;
+            font-size: 14px;
+        }
+
+        .ranking-position.top1 {
+            color: #FFD700;
+        }
+
+        .ranking-position.top2 {
+            color: #C0C0C0;
+        }
+
+        .ranking-position.top3 {
+            color: #CD7F32;
+        }
+
+        .ranking-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .ranking-nick {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+        }
+
+        .ranking-value {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .ranking-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            color: white;
+        }
+
+        .friends-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .friend-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .friend-status {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+        }
+
+        .friend-status.online {
+            color: #4CAF50;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-friend {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-friend.invite {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+
+        .btn-friend.invite:hover {
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-friend.remove {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        .btn-friend.remove:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        .add-friend {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .add-friend input {
+            flex: 1;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .add-friend input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-friend input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-add {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add:hover {
+            transform: scale(1.05);
+        }
+
+        .no-friends {
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .user-info {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .server-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .server-info {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">⚽</div>
+                <div class="logo-text">Goal<span>Verse</span></div>
+            </div>
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="menuAvatar">😊</div>
+                <div>
+                    <div class="user-name" id="menuUsername">Carregando...</div>
+                    <div class="user-nick" id="menuNick">@carregando</div>
+                </div>
+                <button class="btn-profile" onclick="goToProfile()">👤 Perfil</button>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div>
+                <div class="card">
+                    <div class="card-title">🌍 <span>Servidores</span></div>
+                    <div class="servers-list" id="serversList">
+                        <div class="server-item" onclick="joinServer('sala1')">
+                            <div class="server-header">
+                                <div class="server-name">🏟️ Sala 1 - Futebol</div>
+                                <div class="server-status">
+                                    <span class="status-dot green"></span>
+                                    <span id="sala1Status">5v5</span>
+                                </div>
+                            </div>
+                            <div class="server-info">
+                                <span class="server-players">👥 <span id="sala1Players">0</span>/10 jogadores</span>
+                                <button class="btn-join" id="sala1Btn">▶ Entrar</button>
+                            </div>
+                        </div>
+
+                        <div class="server-item" onclick="joinServer('sala2')">
+                            <div class="server-header">
+                                <div class="server-name">⚔️ Sala 2 - Batalha</div>
+                                <div class="server-status">
+                                    <span class="status-dot green"></span>
+                                    <span>3v3</span>
+                                </div>
+                            </div>
+                            <div class="server-info">
+                                <span class="server-players">👥 <span id="sala2Players">0</span>/6 jogadores</span>
+                                <button class="btn-join" id="sala2Btn">▶ Entrar</button>
+                            </div>
+                        </div>
+
+                        <div class="server-item" onclick="joinServer('sala3')">
+                            <div class="server-header">
+                                <div class="server-name">🎯 Sala 3 - Duelo</div>
+                                <div class="server-status">
+                                    <span class="status-dot green"></span>
+                                    <span>2v2</span>
+                                </div>
+                            </div>
+                            <div class="server-info">
+                                <span class="server-players">👥 <span id="sala3Players">0</span>/4 jogadores</span>
+                                <button class="btn-join" id="sala3Btn">▶ Entrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🏆 <span>Ranking Mundial</span></div>
+                    <div class="ranking-tabs">
+                        <button class="tab-btn active" onclick="switchRanking('goals')">⚽ Gols</button>
+                        <button class="tab-btn" onclick="switchRanking('assists')">🎯 Assistências</button>
+                    </div>
+                    <div id="rankingList">
+                        <div class="ranking-item">
+                            <div class="ranking-position top1">1</div>
+                            <div class="ranking-avatar">😎</div>
+                            <div class="ranking-info">
+                                <div class="ranking-name">Nenhum jogador</div>
+                                <div class="ranking-nick">Sem dados</div>
+                            </div>
+                            <div class="ranking-value">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <div class="card-title">👥 <span>Amigos</span></div>
+                    <div class="friends-list" id="friendsList">
+                        <div class="no-friends">Nenhum amigo adicionado</div>
+                    </div>
+                    <div class="add-friend">
+                        <input type="text" id="friendInput" placeholder="Digite o nome do amigo">
+                        <button class="btn-add" onclick="addFriend()">➕ Adicionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let rankingType = 'goals';
+
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('goalverse_users') || '{}');
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('goalverse_users', JSON.stringify(users));
+        }
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('goalverse_current_user') || 'null');
+        }
+
+        function loadUserInfo() {
+            const username = getCurrentUser();
+            if (!username) {
+                window.location.href = 'profile.html';
+                return;
+            }
+
+            const users = getUsers();
+            const user = users[username];
+            if (!user) {
+                window.location.href = 'profile.html';
+                return;
+            }
+
+            currentUser = username;
+            document.getElementById('menuAvatar').textContent = user.avatar || '😊';
+            document.getElementById('menuUsername').textContent = user.username;
+            document.getElementById('menuNick').textContent = '@' + (user.nickname || user.username);
+
+            loadServers();
+            loadRanking();
+            loadFriends();
+        }
+
+        function loadServers() {
+            const users = getUsers();
+            const rooms = {
+                sala1: { max: 10, players: [] },
+                sala2: { max: 6, players: [] },
+                sala3: { max: 4, players: [] }
+            };
+
+            for (let username in users) {
+                const user = users[username];
+                if (user.currentRoom) {
+                    if (rooms[user.currentRoom]) {
+                        rooms[user.currentRoom].players.push(username);
+                    }
+                }
+            }
+
+            for (let roomId in rooms) {
+                const room = rooms[roomId];
+                const count = room.players.length;
+                const max = room.max;
+                document.getElementById(roomId + 'Players').textContent = count;
+                
+                const btn = document.getElementById(roomId + 'Btn');
+                if (count >= max) {
+                    btn.disabled = true;
+                    btn.textContent = '⛔ Cheia';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = '▶ Entrar';
+                }
+            }
+        }
+
+        function joinServer(roomId) {
+            if (!currentUser) return;
+            
+            const users = getUsers();
+            const user = users[currentUser];
+            if (!user) return;
+
+            const rooms = {
+                sala1: { max: 10, players: [] },
+                sala2: { max: 6, players: [] },
+                sala3: { max: 4, players: [] }
+            };
+
+            for (let username in users) {
+                const u = users[username];
+                if (u.currentRoom) {
+                    if (rooms[u.currentRoom]) {
+                        rooms[u.currentRoom].players.push(username);
+                    }
+                }
+            }
+
+            if (rooms[roomId].players.length >= rooms[roomId].max) {
+                alert('Sala cheia!');
+                return;
+            }
+
+            for (let r in rooms) {
+                if (users[currentUser].currentRoom === r) {
+                    const index = rooms[r].players.indexOf(currentUser);
+                    if (index > -1) rooms[r].players.splice(index, 1);
+                }
+            }
+
+            user.currentRoom = roomId;
+            users[currentUser] = user;
+            saveUsers(users);
+
+            localStorage.setItem('goalverse_room', roomId);
+            window.location.href = 'game.html';
+        }
+
+        function loadRanking() {
+            const users = getUsers();
+            let list = [];
+
+            for (let username in users) {
+                const user = users[username];
+                const stats = user.stats || {};
+                list.push({
+                    username: username,
+                    nickname: user.nickname || username,
+                    avatar: user.avatar || '😊',
+                    value: rankingType === 'goals' ? (stats.goals || 0) : (stats.assists || 0)
+                });
+            }
+
+            list.sort((a, b) => b.value - a.value);
+            list = list.slice(0, 10);
+
+            const container = document.getElementById('rankingList');
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="ranking-item">
+                        <div class="ranking-position">1</div>
+                        <div class="ranking-avatar">😊</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">Nenhum jogador</div>
+                            <div class="ranking-nick">Sem dados</div>
+                        </div>
+                        <div class="ranking-value">0</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = list.map((item, index) => {
+                let posClass = '';
+                if (index === 0) posClass = 'top1';
+                else if (index === 1) posClass = 'top2';
+                else if (index === 2) posClass = 'top3';
+
+                return `
+                    <div class="ranking-item">
+                        <div class="ranking-position ${posClass}">${index + 1}</div>
+                        <div class="ranking-avatar">${item.avatar}</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">${item.username}</div>
+                            <div class="ranking-nick">@${item.nickname}</div>
+                        </div>
+                        <div class="ranking-value">${item.value}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function switchRanking(type) {
+            rankingType = type;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (type === 'goals') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            }
+            loadRanking();
+        }
+
+        function loadFriends() {
+            const users = getUsers();
+            const user = users[currentUser];
+            if (!user) return;
+
+            const friends = user.friends || [];
+            const container = document.getElementById('friendsList');
+
+            if (friends.length === 0) {
+                container.innerHTML = '<div class="no-friends">Nenhum amigo adicionado</div>';
+                return;
+            }
+
+            container.innerHTML = friends.map(friend => {
+                const friendData = users[friend];
+                const isOnline = friendData && friendData.currentRoom ? true : false;
+                
+                return `
+                    <div class="friend-item">
+                        <div class="friend-avatar">${friendData ? friendData.avatar || '😊' : '😊'}</div>
+                        <div class="friend-info">
+                            <div class="friend-name">${friend}</div>
+                            <div class="friend-status ${isOnline ? 'online' : ''}">
+                                ${isOnline ? '🟢 Online' : '⚪ Offline'}
+                            </div>
+                        </div>
+                        <div class="friend-actions">
+                            <button class="btn-friend invite" onclick="inviteFriend('${friend}')">🎮 Convidar</button>
+                            <button class="btn-friend remove" onclick="removeFriend('${friend}')">✕</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addFriend() {
+            const input = document.getElementById('friendInput');
+            const friendName = input.value.trim();
+
+            if (!friendName) {
+                alert('Digite o nome do amigo!');
+                return;
+            }
+
+            if (friendName === currentUser) {
+                alert('Você não pode se adicionar!');
+                return;
+            }
+
+            const users = getUsers();
+            if (!users[friendName]) {
+                alert('Usuário não encontrado!');
+                return;
+            }
+
+            const user = users[currentUser];
+            if (!user.friends) user.friends = [];
+
+            if (user.friends.includes(friendName)) {
+                alert('Este usuário já é seu amigo!');
+                return;
+            }
+
+            user.friends.push(friendName);
+            users[currentUser] = user;
+            saveUsers(users);
+            input.value = '';
+            loadFriends();
+            alert('Amigo adicionado com sucesso!');
+        }
+
+        function removeFriend(friendName) {
+            if (!confirm(`Remover ${friendName} dos amigos?`)) return;
+
+            const users = getUsers();
+            const user = users[currentUser];
+            user.friends = user.friends.filter(f => f !== friendName);
+            users[currentUser] = user;
+            saveUsers(users);
+            loadFriends();
+        }
+
+        function inviteFriend(friendName) {
+            const users = getUsers();
+            const friend = users[friendName];
+            if (!friend || !friend.currentRoom) {
+                alert(`${friendName} está offline!`);
+                return;
+            }
+            alert(`🎮 Convite enviado para ${friendName}!`);
+        }
+
+        function goToProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        window.addEventListener('DOMContentLoaded', loadUserInfo);
+
+        setInterval(() => {
+            loadServers();
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GoalVerse - Jogo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a1a;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            touch-action: none;
+        }
+
+        .game-wrapper {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #0a0a1a;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            background: rgba(26, 26, 46, 0.95);
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+            min-height: 50px;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .game-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .room-badge {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #667eea;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .player-badge {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .player-badge span {
+            color: #4CAF50;
+        }
+
+        .btn-leave-game {
+            padding: 6px 16px;
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 10px;
+            color: #f44336;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-leave-game:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-kick {
+            padding: 4px 12px;
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            border-radius: 8px;
+            color: #FF9800;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-kick:hover {
+            background: rgba(255, 152, 0, 0.3);
+        }
+
+        .game-container {
+            flex: 1;
+            position: relative;
+            background: #0f3460;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #0f3460;
+            touch-action: none;
+            cursor: none;
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .score-display {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            pointer-events: none;
+        }
+
+        .score-team {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .score-team.red {
+            color: #f44336;
+        }
+
+        .score-team.blue {
+            color: #2196F3;
+        }
+
+        .score-divider {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+        }
+
+        .game-status-bar {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+        }
+
+        .status-text strong {
+            color: white;
+        }
+
+        .players-count {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+
+        .mobile-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: none;
+            justify-content: space-between;
+            padding: 0 20px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .mobile-controls.active {
+            display: flex;
+        }
+
+        .joystick-area {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            pointer-events: auto;
+            touch-action: none;
+        }
+
+        .joystick-knob {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .kick-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #f44336, #d32f2f);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            pointer-events: auto;
+            touch-action: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(244, 67, 54, 0.3);
+            cursor: pointer;
+            transition: all 0.1s;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .kick-button:active {
+            transform: scale(0.9);
+            box-shadow: 0 0 60px rgba(244, 67, 54, 0.5);
+        }
+
+        .direction-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            display: none;
+        }
+
+        .direction-indicator.active {
+            display: block;
+        }
+
+        .direction-arrow {
+            width: 40px;
+            height: 40px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+            border-top: 4px solid rgba(255, 255, 255, 0.5);
+            transform: rotate(45deg);
+            position: absolute;
+            top: -20px;
+            left: -20px;
+        }
+
+        .friend-indicator {
+            position: absolute;
+            top: 60px;
+            right: 15px;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            padding: 8px 15px;
+            border-radius: 12px;
+            color: #4CAF50;
+            font-size: 12px;
+            font-weight: 600;
+            pointer-events: none;
+            display: none;
+        }
+
+        .friend-indicator.show {
+            display: block;
+        }
+
+        .waiting-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            backdrop-filter: blur(5px);
+        }
+
+        .waiting-overlay.hidden {
+            display: none;
+        }
+
+        .waiting-text {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .waiting-sub {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+        }
+
+        .waiting-players {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .waiting-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .game-header {
+                padding: 5px 10px;
+                min-height: 40px;
+            }
+
+            .room-badge {
+                font-size: 10px;
+                padding: 3px 10px;
+            }
+
+            .player-badge {
+                font-size: 11px;
+            }
+
+            .btn-leave-game {
+                padding: 4px 12px;
+                font-size: 10px;
+            }
+
+            .score-display {
+                padding: 5px 15px;
+                gap: 15px;
+                top: 10px;
+            }
+
+            .score-team {
+                font-size: 16px;
+            }
+
+            .score-divider {
+                font-size: 16px;
+            }
+
+            .mobile-controls.active {
+                display: flex;
+            }
+
+            .joystick-area {
+                width: 100px;
+                height: 100px;
+            }
+
+            .joystick-knob {
+                width: 40px;
+                height: 40px;
+            }
+
+            .kick-button {
+                width: 65px;
+                height: 65px;
+                font-size: 13px;
+            }
+
+            .game-status-bar {
+                padding: 5px 15px;
+                bottom: 100px;
+            }
+
+            .status-text {
+                font-size: 11px;
+            }
+
+            .waiting-text {
+                font-size: 18px;
+            }
+
+            .waiting-sub {
+                font-size: 13px;
+            }
+        }
+
+        @media (pointer: coarse) {
+            .mobile-controls.active {
+                display: flex;
+            }
+        }
+
+        @media (pointer: fine) {
+            .mobile-controls.active {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-wrapper">
+        <div class="game-header">
+            <div class="game-header-left">
+                <span class="room-badge" id="roomBadge">🏟️ Carregando...</span>
+                <span class="player-badge">👤 <span id="playerNameDisplay">Jogador</span></span>
+            </div>
+            <div class="game-header-right">
+                <button class="btn-leave-game" onclick="leaveGame()">🚪 Sair</button>
+            </div>
+        </div>
+
+        <div class="game-container" id="gameContainer">
+            <canvas id="gameCanvas"></canvas>
+
+            <div class="score-display">
+                <span class="score-team red" id="redScore">0</span>
+                <span class="score-divider">vs</span>
+                <span class="score-team blue" id="blueScore">0</span>
+            </div>
+
+            <div class="friend-indicator" id="friendIndicator">🎮 Amigo na partida!</div>
+
+            <div class="game-status-bar">
+                <span class="status-text" id="gameStatusText">⏳ Aguardando jogadores...</span>
+                <span class="players-count" id="playersCount">👥 0/0</span>
+            </div>
+
+            <div class="mobile-controls" id="mobileControls">
+                <div class="joystick-area" id="joystickArea">
+                    <div class="joystick-knob" id="joystickKnob"></div>
+                </div>
+                <div class="kick-button" id="kickButton">⚽ CHUTAR</div>
+            </div>
+
+            <div class="waiting-overlay" id="waitingOverlay">
+                <div class="waiting-spinner"></div>
+                <div class="waiting-text">⏳ Aguardando...</div>
+                <div class="waiting-sub">Aguardando mais jogadores</div>
+                <div class="waiting-players" id="waitingPlayers">👥 1/2 jogadores</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('gameContainer');
+
+        let canvasWidth, canvasHeight;
+
+        function resizeCanvas() {
+            const rect = container.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            canvasWidth = canvas.width;
+            canvasHeight = canvas.height;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const playerName = localStorage.getItem('goalverse_current_user') || 'Jogador';
+        const roomId = localStorage.getItem('goalverse_room') || 'sala1';
+
+        document.getElementById('playerNameDisplay').textContent = playerName;
+
+        const roomNames = {
+            sala1: '🏟️ Sala 1 - Futebol 5v5',
+            sala2: '⚔️ Sala 2 - Batalha 3v3',
+            sala3: '🎯 Sala 3 - Duelo 2v2'
+        };
+
+        document.getElementById('roomBadge').textContent = roomNames[roomId] || '🏟️ Sala';
+
+        const users = JSON.parse(localStorage.getItem('goalverse_users') || '{}');
+        const currentUserData = users[playerName] || {};
+        const friends = currentUserData.friends || [];
+
+        let friendInRoom = false;
+        for (let friend of friends) {
+            if (users[friend] && users[friend].currentRoom === roomId) {
+                friendInRoom = true;
+                break;
+            }
+        }
+
+        if (friendInRoom) {
+            document.getElementById('friendIndicator').classList.add('show');
+        }
+
+        const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        if (isMobile) {
+            document.getElementById('mobileControls').classList.add('active');
+        }
+
+        let gameState = 'waiting';
+        let players = {};
+        let ball = {
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            radius: 12
+        };
+
+        let localPlayer = {
+            x: 0,
+            y: 0,
+            radius: 18,
+            speed: 4.5,
+            direction: 0,
+            team: 'red',
+            kicking: false,
+            kickCooldown: 0
+        };
+
+        let scores = { red: 0, blue: 0 };
+        let keys = { w: false, a: false, s: false, d: false };
+        let joystick = { x: 0, y: 0, active: false };
+        let isKicking = false;
+
+        let playersList = [];
+
+        function initGame() {
+            ball.x = canvasWidth / 2;
+            ball.y = canvasHeight / 2;
+            ball.vx = 0;
+            ball.vy = 0;
+
+            localPlayer.x = canvasWidth * 0.25;
+            localPlayer.y = canvasHeight / 2;
+
+            const roomConfigs = {
+                sala1: { maxPlayers: 10, teams: { red: [], blue: [] } },
+                sala2: { maxPlayers: 6, teams: { red: [], blue: [] } },
+                sala3: { maxPlayers: 4, teams: { red: [], blue: [] } }
+            };
+
+            const config = roomConfigs[roomId] || roomConfigs.sala1;
+            const totalPlayers = Math.min(Object.keys(users).length, config.maxPlayers);
+            const half = Math.floor(totalPlayers / 2);
+
+            let redTeam = [];
+            let blueTeam = [];
+            const allPlayers = Object.keys(users).filter(u => users[u].currentRoom === roomId);
+            
+            allPlayers.forEach((name, index) => {
+                if (index < half) {
+                    redTeam.push(name);
+                } else {
+                    blueTeam.push(name);
+                }
+            });
+
+            if (redTeam.includes(playerName)) {
+                localPlayer.team = 'red';
+                localPlayer.x = canvasWidth * 0.25;
+            } else if (blueTeam.includes(playerName)) {
+                localPlayer.team = 'blue';
+                localPlayer.x = canvasWidth * 0.75;
+            }
+
+            playersList = allPlayers;
+            document.getElementById('waitingPlayers').textContent = `👥 ${playersList.length}/${config.maxPlayers} jogadores`;
+
+            if (playersList.length >= 2) {
+                startGame();
+            }
+        }
+
+        function startGame() {
+            gameState = 'playing';
+            document.getElementById('waitingOverlay').classList.add('hidden');
+            document.getElementById('gameStatusText').textContent = '🎮 Jogo em andamento!';
+            document.getElementById('playersCount').textContent = `👥 ${playersList.length} jogadores`;
+        }
+
+        function updatePlayerMovement() {
+            if (gameState !== 'playing') return;
+
+            let dx = 0, dy = 0;
+
+            if (isMobile && joystick.active) {
+                const magnitude = Math.sqrt(joystick.x * joystick.x + joystick.y * joystick.y);
+                if (magnitude > 0.1) {
+                    const normalizedX = joystick.x / magnitude;
+                    const normalizedY = joystick.y / magnitude;
+                    const speed = Math.min(magnitude, 1) * localPlayer.speed;
+                    dx = normalizedX * speed;
+                    dy = normalizedY * speed;
+                    
+                    if (magnitude > 0.2) {
+                        localPlayer.direction = Math.atan2(normalizedY, normalizedX);
+                    }
+                }
+            } else {
+                if (keys.w) dy = -localPlayer.speed;
+                if (keys.s) dy = localPlayer.speed;
+                if (keys.a) dx = -localPlayer.speed;
+                if (keys.d) dx = localPlayer.speed;
+
+                if (dx !== 0 || dy !== 0) {
+                    const length = Math.sqrt(dx * dx + dy * dy);
+                    dx = (dx / length) * localPlayer.speed;
+                    dy = (dy / length) * localPlayer.speed;
+                    localPlayer.direction = Math.atan2(dy, dx);
+                }
+            }
+
+            if (dx !== 0 || dy !== 0) {
+                const newX = localPlayer.x + dx;
+                const newY = localPlayer.y + dy;
+                
+                const margin = localPlayer.radius;
+                localPlayer.x = Math.max(margin, Math.min(canvasWidth - margin, newX));
+                localPlayer.y = Math.max(margin, Math.min(canvasHeight - margin, newY));
+            }
+
+            if (localPlayer.kickCooldown > 0) {
+                localPlayer.kickCooldown--;
+            }
+
+            if (isKicking && localPlayer.kickCooldown === 0) {
+                kickBall();
+                isKicking = false;
+                localPlayer.kickCooldown = 20;
+            }
+
+            updateBall();
+        }
+
+        function kickBall() {
+            const kickPower = 12;
+            const direction = localPlayer.direction;
+            
+            const dx = Math.cos(direction) * kickPower;
+            const dy = Math.sin(direction) * kickPower;
+            
+            const distToBall = Math.sqrt(
+                Math.pow(ball.x - localPlayer.x, 2) + 
+                Math.pow(ball.y - localPlayer.y, 2)
+            );
+            
+            if (distToBall < localPlayer.radius + ball.radius + 5) {
+                ball.vx += dx * 0.5;
+                ball.vy += dy * 0.5;
+                
+                const angle = Math.atan2(ball.y - localPlayer.y, ball.x - localPlayer.x);
+                const pushForce = 5;
+                ball.vx += Math.cos(angle) * pushForce;
+                ball.vy += Math.sin(angle) * pushForce;
+            }
+        }
+
+        function updateBall() {
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+            
+            ball.vx *= 0.98;
+            ball.vy *= 0.98;
+            
+            if (Math.abs(ball.vx) < 0.01) ball.vx = 0;
+            if (Math.abs(ball.vy) < 0.01) ball.vy = 0;
+
+            const margin = ball.radius;
+            if (ball.x - margin < 0) {
+                ball.x = margin;
+                ball.vx = -ball.vx * 0.8;
+            }
+            if (ball.x + margin > canvasWidth) {
+                ball.x = canvasWidth - margin;
+                ball.vx = -ball.vx * 0.8;
+            }
+            if (ball.y - margin < 0) {
+                ball.y = margin;
+                ball.vy = -ball.vy * 0.8;
+            }
+            if (ball.y + margin > canvasHeight) {
+                ball.y = canvasHeight - margin;
+                ball.vy = -ball.vy * 0.8;
+            }
+
+            checkGoal();
+        }
+
+        function checkGoal() {
+            const goalWidth = 60;
+            const goalHeight = 120;
+            
+            if (ball.x < 20 && ball.y > canvasHeight/2 - goalHeight/2 && ball.y < canvasHeight/2 + goalHeight/2) {
+                scores.blue++;
+                resetBall();
+                document.getElementById('blueScore').textContent = scores.blue;
+            }
+            
+            if (ball.x > canvasWidth - 20 && ball.y > canvasHeight/2 - goalHeight/2 && ball.y < canvasHeight/2 + goalHeight/2) {
+                scores.red++;
+                resetBall();
+                document.getElementById('redScore').textContent = scores.red;
+            }
+        }
+
+        function resetBall() {
+            ball.x = canvasWidth / 2;
+            ball.y = canvasHeight / 2;
+            ball.vx = 0;
+            ball.vy = 0;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            drawField();
+            drawPlayers();
+            drawBall();
+            drawDirection();
+        }
+
+        function drawField() {
+            ctx.fillStyle = '#0f3460';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(canvasWidth/2, 0);
+            ctx.lineTo(canvasWidth/2, canvasHeight);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(canvasWidth/2, canvasHeight/2, 60, 0, Math.PI * 2);
+            ctx.stroke();
+
+            const goalWidth = 60;
+            const goalHeight = 120;
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.lineWidth = 3;
+
+            ctx.strokeRect(10, canvasHeight/2 - goalHeight/2, goalWidth, goalHeight);
+            ctx.strokeRect(canvasWidth - 10 - goalWidth, canvasHeight/2 - goalHeight/2, goalWidth, goalHeight);
+
+            ctx.fillStyle = 'rgba(255,255,255,0.03)';
+            ctx.fillRect(0, canvasHeight/2 - goalHeight/2, 20, goalHeight);
+            ctx.fillRect(canvasWidth - 20, canvasHeight/2 - goalHeight/2, 20, goalHeight);
+        }
+
+        function drawPlayers() {
+            const allPlayers = Object.keys(users).filter(u => users[u].currentRoom === roomId);
+            
+            allPlayers.forEach((name, index) => {
+                let x, y, team;
+                const isLocal = name === playerName;
+                
+                if (isLocal) {
+                    x = localPlayer.x;
+                    y = localPlayer.y;
+                    team = localPlayer.team;
+                } else {
+                    const offset = index * 40;
+                    if (index % 2 === 0) {
+                        x = canvasWidth * 0.3 + (index * 30);
+                        y = canvasHeight * 0.2 + (index * 35);
+                    } else {
+                        x = canvasWidth * 0.7 - (index * 30);
+                        y = canvasHeight * 0.8 - (index * 35);
+                    }
+                    team = index % 2 === 0 ? 'red' : 'blue';
+                }
+
+                const isRed = team === 'red';
+                const color = isRed ? '#f44336' : '#2196F3';
+                const glowColor = isRed ? 'rgba(244, 67, 54, 0.3)' : 'rgba(33, 150, 243, 0.3)';
+
+                ctx.shadowColor = glowColor;
+                ctx.shadowBlur = 20;
+
+                ctx.beginPath();
+                ctx.arc(x, y, localPlayer.radius, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = 'white';
+                ctx.font = isMobile ? '10px Arial' : '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(isLocal ? 'Você' : name, x, y - localPlayer.radius - 5);
+
+                if (isLocal && isKicking) {
+                    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(x, y, localPlayer.radius + 10, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            });
+        }
+
+        function drawBall() {
+            const gradient = ctx.createRadialGradient(
+                ball.x - 4, ball.y - 4, 2,
+                ball.x, ball.y, ball.radius
+            );
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(0.7, '#e0e0e0');
+            gradient.addColorStop(1, '#999999');
+
+            ctx.shadowColor = 'rgba(255,255,255,0.2)';
+            ctx.shadowBlur = 15;
+
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        function drawDirection() {
+            if (gameState !== 'playing') return;
+
+            const dirX = Math.cos(localPlayer.direction);
+            const dirY = Math.sin(localPlayer.direction);
+            const lineLength = 30;
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+
+            ctx.beginPath();
+            ctx.moveTo(localPlayer.x, localPlayer.y);
+            ctx.lineTo(localPlayer.x + dirX * lineLength, localPlayer.y + dirY * lineLength);
+            ctx.stroke();
+
+            ctx.setLineDash([]);
+        }
+
+        function gameLoop() {
+            updatePlayerMovement();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            if (['w', 'a', 's', 'd', ' '].includes(key)) {
+                e.preventDefault();
+            }
+            if (key === ' ') {
+                if (gameState === 'playing' && localPlayer.kickCooldown === 0) {
+                    isKicking = true;
+                }
+                return;
+            }
+            if (key in keys) {
+                keys[key] = true;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            if (key === ' ') {
+                isKicking = false;
+                return;
+            }
+            if (key in keys) {
+                keys[key] = false;
+            }
+        });
+
+        const joystickArea = document.getElementById('joystickArea');
+        const joystickKnob = document.getElementById('joystickKnob');
+
+        if (isMobile) {
+            let touchId = null;
+
+            joystickArea.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                touchId = touch.identifier;
+                joystick.active = true;
+                updateJoystick(touch);
+            });
+
+            joystickArea.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = Array.from(e.touches).find(t => t.identifier === touchId);
+                if (touch) {
+                    updateJoystick(touch);
+                }
+            });
+
+            joystickArea.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                joystick.active = false;
+                joystick.x = 0;
+                joystick.y = 0;
+                joystickKnob.style.transform = 'translate(-50%, -50%)';
+                touchId = null;
+            });
+
+            function updateJoystick(touch) {
+                const rect = joystickArea.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const maxDist = rect.width / 2 - 25;
+
+                let dx = touch.clientX - centerX;
+                let dy = touch.clientY - centerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance > maxDist) {
+                    dx = (dx / distance) * maxDist;
+                    dy = (dy / distance) * maxDist;
+                }
+
+                joystick.x = dx / maxDist;
+                joystick.y = dy / maxDist;
+
+                joystickKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+            }
+
+            document.getElementById('kickButton').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (gameState === 'playing' && localPlayer.kickCooldown === 0) {
+                    isKicking = true;
+                }
+            });
+
+            document.getElementById('kickButton').addEventListener('touchend', (e) => {
+                e.preventDefault();
+                isKicking = false;
+            });
+        }
+
+        function leaveGame() {
+            if (confirm('Tem certeza que quer sair da partida?')) {
+                const users = JSON.parse(localStorage.getItem('goalverse_users') || '{}');
+                if (users[playerName]) {
+                    delete users[playerName].currentRoom;
+                    localStorage.setItem('goalverse_users', JSON.stringify(users));
+                }
+                localStorage.removeItem('goalverse_room');
+                window.location.href = 'menu.html';
+            }
+        }
+
+        document.querySelector('.btn-leave-game').addEventListener('click', leaveGame);
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initGame();
+        });
+
+        initGame();
+        gameLoop();
+
+        console.log('🎮 GoalVerse - Jogo iniciado!');
+        console.log(`👤 Jogador: ${playerName}`);
+        console.log(`🏟️ Sala: ${roomId}`);
+        console.log(`📱 Mobile: ${isMobile ? 'Sim' : 'Não'}`);
+        console.log(`👥 Amigo na sala: ${friendInRoom ? 'Sim 🎮' : 'Não'}`);
+    </script>
+</body>
+</html>
